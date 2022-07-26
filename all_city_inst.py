@@ -13,7 +13,6 @@ def all_city_institutions(header):
     openalex_dir = r'C:\tmp\openalex'
 
     while True:
-        
         ## ask for a country name; convert it to uppercase letters
         ## then retrieve the ISO country code
         ## and feed it to the API call
