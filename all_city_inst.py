@@ -13,9 +13,13 @@ def all_city_institutions(header):
     openalex_dir = r'C:\tmp\openalex'
 
     while True:
+
         ## ask for a country name; convert it to uppercase letters
         ## then retrieve the ISO country code
         ## and feed it to the API call
+        print('Start by providing a country name, then providing a city name.\n'
+              + 'Choose a new country by typing ' + '\"new country\".\n'
+              + 'Exit the program by typing ' + '\"quit\" ' + 'at either input.\n')
         country_input = input( 'Enter a country to search: ' )
         if country_input == 'quit':
             exit()
@@ -48,7 +52,6 @@ def all_city_institutions(header):
             city = input("Enter city for a list of institutions: ")
             if city == 'new country':
                 break
-
             if city == 'quit':
                 exit()
 
