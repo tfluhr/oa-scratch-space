@@ -41,9 +41,6 @@ def bibtext_oa_conversion(doi):
                         'url'                  : oa_work['host_venue']['url'],
                         'volume'               : oa_work['biblio']['volume'],
                         'year'                 : oa_work['publication_year']}
-                        # ('address', 'annote', 'chapter', 'edition', 'editor', 'howpublished',
-                        #  'institution', 'isbn', 'note', 'organization', 'school', 'series')
-                        # : 'null'}
 
       ## create a folder for output files if one doesn't exist
       isExist = os.path.exists(openalex_dir)
