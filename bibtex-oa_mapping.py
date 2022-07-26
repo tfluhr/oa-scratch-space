@@ -53,7 +53,7 @@ def bibtext_oa_conversion(doi):
 
       bibtex_pretext = '@' + bibtex_entry_type_map[bibtex_entrytype] + '{' + bibtex_citekey + ","
       print(bibtex_pretext)
-      file = open(openalex_dir + "\\" + str('bibtex') + ".bib", 'a')
+      file = open(openalex_dir + "\\" + str(bibtex_citekey) + ".bib", 'a')
       file.writelines(bibtex_pretext + '\n')
 
       for i,j in bibtex_mapping.items():
@@ -67,5 +67,7 @@ def bibtext_oa_conversion(doi):
       print("}")
 
 
+my_dois = ('doi.org/10.1038/nature15254', 'doi.org/10.2217/fmb-2016-0070', 'doi.org/10.1038/nbt.3227')
 
-bibtext_oa = bibtext_oa_conversion('10.1016/S0006-3207(02)00392-0')
+for i in my_dois:
+    bibtext_oa_conversion(i)
