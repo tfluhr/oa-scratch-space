@@ -1,4 +1,17 @@
 Input doi
+  - interface
 Hit a button
+  - -interface
+Generate a list of citations or cited by
+  - function to grab dois
+  - function to iterate through list of dois to collect citation elements
 Get a list of reference titles to select from (maybe!)
+  - interface
+  - select function
 select export method
+ - bibtex
+    - map json to bibtex
+    - transform function
+  - csv
+    - map json to csv
+    - transform function
