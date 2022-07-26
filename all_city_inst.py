@@ -46,7 +46,7 @@ def all_city_institutions(header):
         ## ask for a city name
         city = input("Enter city for a list of institutions: ")
         if city == 'quit':
-            break
+            exit()
 
         ## loop to make an API call for each page of results from the initial country query
         ## save institution names that match the city query in a list object
