@@ -1,6 +1,5 @@
 import requests, json, urllib, os, sys, math, time
-from urllib.error import URLError
-from datetime import date
+from datetime import datetime, date
 
 ## example doi: 'doi.org/10.1016/S0006-3207(02)00392-0'
 
@@ -49,6 +48,16 @@ def bibtext_oa_conversion(oaid):
             elif my_key in key:
                 return val
 
+    oa_first_page = oa_work['biblio']['first_page']
+    oa_last_page = oa_work['biblio']['last_page']
+    oa_page_numbers_draft = str(oa_first_page) + ', ' + str(oa_last_page)
+    oa_page_numbers = ''
+
+    if oa_page_numbers_draft == 'None, None':
+        oa_page_numbers = 'null'
+    else:
+        oa_page_numbers = oa_page_numbers_draft
+
     ## BibTeX Dictionary of mapped values
 
     bibtex_mapping = {'title': oa_work['title'],
@@ -59,7 +68,7 @@ def bibtext_oa_conversion(oaid):
                       'journal': oa_work['host_venue']['display_name'],
                       'month': oa_work_pub_date.strftime("%b").lower(),
                       'number': oa_work['biblio']['issue'],
-                      'pages': str(oa_work['biblio']['first_page']) + ', ' + str(oa_work['biblio']['last_page']),
+                      'pages': oa_page_numbers,
                       'type': is_in_bibtex_entry(oa_work['type']),
                       'url': oa_work['host_venue']['url'],
                       'volume': oa_work['biblio']['volume'],
@@ -73,7 +82,7 @@ def bibtext_oa_conversion(oaid):
     for i, j in bibtex_mapping.items():
         if i == None:
             continue
-        elif j == None:
+        elif j == None or j == 'null':
             continue
         else:
             line = str(i) + " = " + '{' + str(j) + "},\n"
@@ -89,7 +98,9 @@ def bibtext_oa_conversion(oaid):
 # my_citations = get_citations('doi.org/10.1016/S0006-3207(02)00392-0')
 
 openalex_dir = r'C:\tmp\openalex\DOI'
-file = open(openalex_dir + "\\" + str(date.today()) + ".bib", 'a', encoding='utf-8')
+now = datetime.now()
+filename = now.strftime('%d-%m-%y-%H-%M-%S')
+file = open(openalex_dir + "\\" + str(filename) + ".bib", 'a', encoding='utf-8')
 
 openalexid = 'https://openalex.org/W2000785263'
 
@@ -99,4 +110,3 @@ for i in oarefs:
     bibtex_citation = bibtext_oa_conversion(i)
     print(bibtex_citation)
     file.writelines(bibtex_citation + "\n\n")
-
