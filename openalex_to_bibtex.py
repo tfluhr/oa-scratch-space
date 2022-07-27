@@ -1,4 +1,4 @@
-import requests, json, urllib
+import requests, json, urllib, os
 from datetime import datetime, date
 
 ## example doi: 'doi.org/10.1016/S0006-3207(02)00392-0'
@@ -83,7 +83,8 @@ def bibtext_oa_conversion(oaid):
                       'type': is_in_bibtex_entry(oa_work['type']),
                       'url': oa_work['host_venue']['url'],
                       'volume': oa_work['biblio']['volume'],
-                      'year': oa_work['publication_year']}
+                      'year': oa_work['publication_year'],
+                      'note' : oa_work['id']}
 
 
     ### CONSTRUCTING THE BIBTEX CITATION ###
@@ -141,5 +142,5 @@ print(oarefs)
 ## print and write to file all BibTeX citations
 for i in oarefs:
     bibtex_citation = bibtext_oa_conversion(i)
-    print(bibtex_citation)
+    print(bibtex_citation + '\n')
     file.writelines(bibtex_citation + "\n\n")
