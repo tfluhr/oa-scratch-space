@@ -66,11 +66,7 @@ def bibtext_oa_conversion(oaid):
                       'year': oa_work['publication_year']}
 
     ## Try to put together a BibTeX citation
-
-
     bibtex_pretext = '@' + str(is_in_bibtex_entry(bibtex_entrytype)) + '{' + bibtex_citekey + ",\n"
-    # file = open(openalex_dir + "\\" + str(date.today()) + ".bib", 'a', encoding='utf-8')
-    # file.writelines(bibtex_pretext + '\n')
 
     bibtex_citation_str = bibtex_pretext
 
