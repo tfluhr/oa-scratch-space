@@ -54,14 +54,14 @@ def bibtext_oa_conversion(dois):
 
           bibtex_pretext = '@' + bibtex_entry_type_map[bibtex_entrytype] + '{' + bibtex_citekey + ","
           print(bibtex_pretext)
-          file = open(openalex_dir + "\\" + str(date.today()) + ".bib", 'a')
+          file = open(openalex_dir + "\\" + str(date.today()) + ".bib", 'a', encoding='utf-8')
           file.writelines(bibtex_pretext + '\n')
 
           for i,j in bibtex_mapping.items():
                 if j == 'null':
                       pass
                 else:
-                      line = str(i) + " = " + '\"' + str(j) + "\","
+                      line = str(i) + " = " + '{' + str(j) + "},"
                       print(line)
                       file.writelines(line + '\n')
           file.writelines("}\n\n")
