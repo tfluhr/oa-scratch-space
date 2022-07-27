@@ -119,22 +119,26 @@ def bibtext_oa_conversion(oaid):
     return bibtex_citation_str
 
 
-
-
-
-# my_citations = get_citations('doi.org/10.1016/S0006-3207(02)00392-0')
-
+## create a file directory for the completed BibTeX citation file
 openalex_dir = r'C:\tmp\openalex\DOI'
+
+isExist = os.path.exists(openalex_dir)
+if not isExist:
+    os.makedirs(openalex_dir)
+    print("Created new directory for your files")
+
 now = datetime.now()
 filename = now.strftime('%d-%m-%y-%H-%M-%S')
 file = open(openalex_dir + "\\" + str(filename) + ".bib", 'a', encoding='utf-8')
 
-openalexid = input('Enter a DOI, OpenAlex, MAG, PMID, or PMCID: ')
 
+## as for a works identifier
+openalexid = input('Enter a DOI, OpenAlex, MAG, PMID, or PMCID: ')
 oarefs = get_citations(openalexid)
 
 print(oarefs)
 
+## print and write to file all BibTeX citations
 for i in oarefs:
     bibtex_citation = bibtext_oa_conversion(i)
     print(bibtex_citation)
