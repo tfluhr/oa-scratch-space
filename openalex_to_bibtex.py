@@ -39,15 +39,23 @@ def bibtext_oa_conversion(oaid):
                 return val
 
     ## set up "author" field value
-    def get_author():
+    def get_author(author_field_position):
         author_field = ''
         if oa_work['authorships']:
-            author_field = str(oa_work['authorships'][0]['author']['display_name'])
-            return author_field
+            if author_field_position == 'citekey':
+                author_field = str(oa_work['authorships'][0]['author']['display_name'])
+                return author_field
+            else:
+                for i in oa_work['authorships']:
+                    author_field += str(i['author']['display_name']) + ' and '
+                author_citation = author_field.removesuffix(' and ')
+                return author_citation
         else:
             author_field == 'null'
             return author_field
 
+    citekey_author = 'citekey'
+    citation_authors = 'citation'
 
     ## BibTeX entry "type" mapping. OpenAlex uses the Crossref controlled vocabulary for works "types", but this field is
     ## under development by the OpenAlex team. This is my best approximation for a crosswalk between
@@ -72,7 +80,7 @@ def bibtext_oa_conversion(oaid):
 
     ## BibTeX Dictionary of mapped values
     bibtex_mapping = {'title': oa_work['title'],
-                      'author': get_author(),
+                      'author': get_author(citation_authors),
                       'publisher': oa_work['host_venue']['publisher'],
                       'doi': oa_work['doi'],
                       'issn': oa_work['host_venue']['issn_l'],
@@ -91,8 +99,8 @@ def bibtext_oa_conversion(oaid):
 
     ## set up the citation key and pretext
 
-    if get_author():
-        bibtex_citekey = get_author().split()[-1] + \
+    if get_author(citekey_author):
+        bibtex_citekey = get_author(citekey_author).split()[-1] + \
                          str(oa_work['publication_year']) + \
                          str((oa_work['title']).split()[0])
     else:
