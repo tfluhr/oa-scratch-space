@@ -10,5 +10,6 @@ def get_h_index():
     for key in my_dict.keys():
         if key <= my_dict[key]:
             h_list.append(key)
-    h_index = ("h-index is: " + str(h_list[-1]))
+    h_index = ("Your h-index is: " + str(h_list[-1]) + "\n" + 
+              "Learn more about h-index here: https://doi.org/10.1073/pnas.0507655102")
     return(h_index)
