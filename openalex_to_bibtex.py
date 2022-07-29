@@ -1,4 +1,4 @@
-import requests, json, urllib
+import requests, json, urllib, os
 from datetime import datetime, date
 
 ## example doi: 'doi.org/10.1016/S0006-3207(02)00392-0'
@@ -39,15 +39,23 @@ def bibtext_oa_conversion(oaid):
                 return val
 
     ## set up "author" field value
-    def get_author():
+    def get_author(author_field_position):
         author_field = ''
         if oa_work['authorships']:
-            author_field = str(oa_work['authorships'][0]['author']['display_name'])
-            return author_field
+            if author_field_position == 'citekey':
+                author_field = str(oa_work['authorships'][0]['author']['display_name'])
+                return author_field
+            else:
+                for i in oa_work['authorships']:
+                    author_field += str(i['author']['display_name']) + ' and '
+                author_citation = author_field.removesuffix(' and ')
+                return author_citation
         else:
             author_field == 'null'
             return author_field
 
+    citekey_author = 'citekey'
+    citation_authors = 'citation'
 
     ## BibTeX entry "type" mapping. OpenAlex uses the Crossref controlled vocabulary for works "types", but this field is
     ## under development by the OpenAlex team. This is my best approximation for a crosswalk between
@@ -72,7 +80,7 @@ def bibtext_oa_conversion(oaid):
 
     ## BibTeX Dictionary of mapped values
     bibtex_mapping = {'title': oa_work['title'],
-                      'author': get_author(),
+                      'author': get_author(citation_authors),
                       'publisher': oa_work['host_venue']['publisher'],
                       'doi': oa_work['doi'],
                       'issn': oa_work['host_venue']['issn_l'],
@@ -83,15 +91,16 @@ def bibtext_oa_conversion(oaid):
                       'type': is_in_bibtex_entry(oa_work['type']),
                       'url': oa_work['host_venue']['url'],
                       'volume': oa_work['biblio']['volume'],
-                      'year': oa_work['publication_year']}
+                      'year': oa_work['publication_year'],
+                      'note' : oa_work['id']}
 
 
     ### CONSTRUCTING THE BIBTEX CITATION ###
 
     ## set up the citation key and pretext
 
-    if get_author():
-        bibtex_citekey = get_author().split()[-1] + \
+    if get_author(citekey_author):
+        bibtex_citekey = get_author(citekey_author).split()[-1] + \
                          str(oa_work['publication_year']) + \
                          str((oa_work['title']).split()[0])
     else:
@@ -119,23 +128,27 @@ def bibtext_oa_conversion(oaid):
     return bibtex_citation_str
 
 
-
-
-
-# my_citations = get_citations('doi.org/10.1016/S0006-3207(02)00392-0')
-
+## create a file directory for the completed BibTeX citation file
 openalex_dir = r'C:\tmp\openalex\DOI'
+
+isExist = os.path.exists(openalex_dir)
+if not isExist:
+    os.makedirs(openalex_dir)
+    print("Created new directory for your files")
+
 now = datetime.now()
 filename = now.strftime('%d-%m-%y-%H-%M-%S')
 file = open(openalex_dir + "\\" + str(filename) + ".bib", 'a', encoding='utf-8')
 
-openalexid = input('Enter a DOI, OpenAlex, MAG, PMID, or PMCID: ')
 
+## as for a works identifier
+openalexid = input('Enter a DOI, OpenAlex, MAG, PMID, or PMCID: ')
 oarefs = get_citations(openalexid)
 
 print(oarefs)
 
+## print and write to file all BibTeX citations
 for i in oarefs:
     bibtex_citation = bibtext_oa_conversion(i)
-    print(bibtex_citation)
+    print(bibtex_citation + '\n')
     file.writelines(bibtex_citation + "\n\n")
