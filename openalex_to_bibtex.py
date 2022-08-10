@@ -41,15 +41,18 @@ def bibtext_oa_conversion(oaid):
     ## set up "author" field value
     def get_author(author_field_position):
         author_field = ''
+        author_list = []
         if oa_work['authorships']:
             if author_field_position == 'citekey':
                 author_field = str(oa_work['authorships'][0]['author']['display_name'])
                 return author_field
             else:
                 for i in oa_work['authorships']:
-                    author_field += str(i['author']['display_name']) + ' and '
-                author_citation = author_field.removesuffix(' and ')
-                return author_citation
+                    author_list.append(i['author']['display_name'])
+                for j in range(0, len(author_list) - 1):
+                    author_field += str(author_list[j]) + " and "
+                author_field += author_list[-1]
+                return author_field
         else:
             author_field == 'null'
             return author_field
